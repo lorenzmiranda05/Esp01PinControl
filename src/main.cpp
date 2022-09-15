@@ -5,14 +5,19 @@ void setup()
 {
   Serial.begin(921600);
   TelnetStream.begin();
-  delay(10);
   loadConfigFile();
   setupOTA();
+  pinMode(relayPin, OUTPUT);
+  pinMode(buttonPin, INPUT);
+  digitalWrite(relayPin, LOW);
+  server.on("/", handleOnConnect);
+  server.on("/toggle", handleToggle);
+  server.onNotFound(handleNotFound);
+  server.begin();
 }
 
 void loop()
 {
-  ArduinoOTA.handle();
   if (wm.run() != WL_CONNECTED)
   {
     serialAndTelnetPrintln("WiFi not connected!");

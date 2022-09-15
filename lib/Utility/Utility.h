@@ -4,11 +4,22 @@
 #include <ESP8266WiFiMulti.h>
 #include <ArduinoOTA.h>
 #include <TelnetStream.h>
+#include <ESP8266WebServer.h>
 
 #define JsonConfigFile "/config.json"
 
 ESP8266WiFiMulti wm;
 char espName[15];
+int broadcastDeviceDetails = 1;
+bool pinStatus = LOW;
+ESP8266WebServer server(80);
+const int buttonPin = 2;
+const int relayPin = 0;
+
+int buttonState = HIGH;
+int lastButtonState = HIGH;
+unsigned long lastDebounceTime = 0;
+unsigned long debounceDelay = 50;
 
 void serialAndTelnetPrint(__FlashStringHelper *message)
 {
@@ -145,4 +156,102 @@ void setupOTA()
 
     ArduinoOTA.begin();
     serialAndTelnetPrintln(F("ESPOTA READY"));
+}
+
+String updateWebpage(uint8_t ledStatus)
+{
+    String ptr = "<!DOCTYPE html> <html>\n";
+    ptr += "<head><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0, user-scalable=no\">\n";
+    ptr += "<title>LED Bulb Control</title>\n";
+    ptr += "<style>html {font-family: Helvetica; display: inline-block; margin: 0px auto; text-align: center;}\n";
+    ptr += "body{margin-top: 50px;} h1 {color: #444444;margin: 50px auto 30px;} h3 {color: #444444;margin-bottom: 50px;}\n";
+    ptr += ".button {display: block;width: 100px;background-color: #3498db;border: none;color: white;padding: 13px 30px;text-decoration: none;font-size: 25px;margin: 0px auto 35px;cursor: pointer;border-radius: 4px;}\n";
+    ptr += ".button-on {background-color: #3498db;}\n";
+    ptr += ".button-on:active {background-color: #34495e;}\n";
+    ptr += "p {font-size: 14px;color: #888;margin-bottom: 10px;}\n";
+    ptr += "</style>\n";
+    ptr += "</head>\n";
+    ptr += "<body>\n";
+    ptr += "<h2>LED Bulb</h2>\n";
+    ptr += "<h3>Location: Logic Trainer</h3>\n";
+
+    if (ledStatus)
+    {
+        ptr += "<p>State: ON</p>\n";
+    }
+    else
+    {
+        ptr += "<p>State: OFF</p>\n";
+    }
+
+    ptr += "<a class=\"button button-toggle\" href=\"/toggle\">TOGGLE</a>\n";
+    ptr += "</body>\n";
+    ptr += "</html>\n";
+    return ptr;
+}
+
+void handleOnConnect()
+{
+    pinStatus = digitalRead(relayPin);
+    if (pinStatus)
+    {
+        serialAndTelnetPrintln("{\"Device\":\"LED Bulb\",\"Location\":\"Logic Trainer\",\"State\":\"ON\"}");
+    }
+    else
+    {
+        serialAndTelnetPrintln("{\"Device\":\"LED Bulb\",\"Location\":\"Logic Trainer\",\"State\":\"OFF\"}");
+    }
+    server.send(200, "text/html", updateWebpage(pinStatus));
+}
+
+void handleToggle()
+{
+    if (digitalRead(relayPin) == 0)
+    {
+        pinStatus = 1;
+        serialAndTelnetPrintln("{\"Device\":\"LED Bulb\",\"Location\":\"Logic Trainer\",\"State\":\"ON\"}");
+    }
+    else if (digitalRead(relayPin) == 1)
+    {
+        pinStatus = 0;
+        serialAndTelnetPrintln("{\"Device\":\"LED Bulb\",\"Location\":\"Logic Trainer\",\"State\":\"OFF\"}");
+    }
+    server.send(200, "text/html", updateWebpage(pinStatus));
+}
+
+void handleNotFound()
+{
+    server.send(404, "text/html", "404 - Page Not found");
+}
+
+void handlePushButtonWithDebounce()
+{
+    int reading = digitalRead(buttonPin);
+
+    if (reading != lastButtonState)
+    {
+        lastDebounceTime = millis();
+    }
+
+    if ((millis() - lastDebounceTime) > debounceDelay)
+    {
+        if (reading != buttonState)
+        {
+            buttonState = reading;
+
+            if (buttonState == LOW)
+            {
+                pinStatus = !pinStatus;
+                if (pinStatus)
+                {
+                    serialAndTelnetPrintln("{\"Device\":\"LED Bulb\",\"Location\":\"Logic Trainer\",\"State\":\"ON\"}");
+                }
+                else
+                {
+                    serialAndTelnetPrintln("{\"Device\":\"LED Bulb\",\"Location\":\"Logic Trainer\",\"State\":\"OFF\"}");
+                }
+            }
+        }
+    }
+    lastButtonState = reading;
 }
