@@ -16,6 +16,7 @@
 
 **data>config.json**
 1. The config.json file looks like this:
+
     ```
     {
         "deviceType" : "ESP01",
