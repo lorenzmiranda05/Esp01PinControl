@@ -86,6 +86,17 @@
 ---
 <br  />
 
+**Web Site**
+1. Landing Page
+    ![github](https://raw.githubusercontent.com/lorenzmiranda05/Esp01PinControl/main/Assets/Images/01%20LED%20Bulb%20Control%20Landing%20Page.png)
+
+1. Toggle Page
+    ![github](https://raw.githubusercontent.com/lorenzmiranda05/Esp01PinControl/main/Assets/Images/02%20LED%20Bulb%20Control%20Toggle%20Page.png)
+    ![github](https://raw.githubusercontent.com/lorenzmiranda05/Esp01PinControl/main/Assets/Images/03%20LED%20Bulb%20Control%20Toggle%20Page.png)
+
+---
+<br  />
+
 **Tasks**
 * [x] Connect to WiFi using ESP8266WiFiMulti.h
 * [x] Use WiFi credentials from File System
