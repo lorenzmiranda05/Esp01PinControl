@@ -19,6 +19,7 @@
     ```
     {
         "deviceType" : "ESP01",
+        "broadcastDeviceDetails" : 0,
         "accessPoint" : [
                             {
                                 "ssid": "WiFi1",
@@ -94,7 +95,7 @@
 1. Toggle Page
 
     ![github](https://raw.githubusercontent.com/lorenzmiranda05/Esp01PinControl/main/Assets/Images/02%20LED%20Bulb%20Control%20Toggle%20Page.png)
-    
+
     ![github](https://raw.githubusercontent.com/lorenzmiranda05/Esp01PinControl/main/Assets/Images/03%20LED%20Bulb%20Control%20Toggle%20Page.png)
 
 ---
