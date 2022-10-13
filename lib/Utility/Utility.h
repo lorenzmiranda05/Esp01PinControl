@@ -104,7 +104,10 @@ bool loadConfigFile()
                 wm.addAP(json["accessPoint"][0]["ssid"], json["accessPoint"][0]["password"]);
                 wm.addAP(json["accessPoint"][1]["ssid"], json["accessPoint"][1]["password"]);
                 wm.addAP(json["accessPoint"][2]["ssid"], json["accessPoint"][2]["password"]);
-
+                IPAddress gateway(192, 168, 1, 1);
+                IPAddress subnet(255, 255, 0, 0);
+                IPAddress local_IP(json["ipAddress"][0].as<int>(), json["ipAddress"][1].as<int>(), json["ipAddress"][2].as<int>(), json["ipAddress"][3].as<int>());
+                WiFi.config(local_IP, gateway, subnet);
                 return true;
             }
             else
@@ -173,7 +176,7 @@ String updateWebpage(uint8_t ledStatus)
     ptr += "</head>\n";
     ptr += "<body>\n";
     ptr += "<h2>LED Bulb</h2>\n";
-    ptr += "<h3>Location: Logic Trainer</h3>\n";
+    ptr += "<h3>Location: 2F Bedroom</h3>\n";
 
     if (ledStatus)
     {
@@ -190,16 +193,26 @@ String updateWebpage(uint8_t ledStatus)
     return ptr;
 }
 
+void onMessage()
+{
+    serialAndTelnetPrintln("{\"Device\":\"LED Bulb\",\"Location\":\"2F Bedroom\",\"State\":\"ON\"}");
+}
+
+void offMessage()
+{
+    serialAndTelnetPrintln("{\"Device\":\"LED Bulb\",\"Location\":\"2F Bedroom\",\"State\":\"OFF\"}");
+}
+
 void handleOnConnect()
 {
     pinStatus = digitalRead(relayPin);
     if (pinStatus)
     {
-        serialAndTelnetPrintln("{\"Device\":\"LED Bulb\",\"Location\":\"Logic Trainer\",\"State\":\"ON\"}");
+        onMessage();
     }
     else
     {
-        serialAndTelnetPrintln("{\"Device\":\"LED Bulb\",\"Location\":\"Logic Trainer\",\"State\":\"OFF\"}");
+        offMessage();
     }
     server.send(200, "text/html", updateWebpage(pinStatus));
 }
@@ -209,12 +222,12 @@ void handleToggle()
     if (digitalRead(relayPin) == 0)
     {
         pinStatus = 1;
-        serialAndTelnetPrintln("{\"Device\":\"LED Bulb\",\"Location\":\"Logic Trainer\",\"State\":\"ON\"}");
+        onMessage();
     }
     else if (digitalRead(relayPin) == 1)
     {
         pinStatus = 0;
-        serialAndTelnetPrintln("{\"Device\":\"LED Bulb\",\"Location\":\"Logic Trainer\",\"State\":\"OFF\"}");
+        offMessage();
     }
     server.send(200, "text/html", updateWebpage(pinStatus));
 }
@@ -244,11 +257,11 @@ void handlePushButtonWithDebounce()
                 pinStatus = !pinStatus;
                 if (pinStatus)
                 {
-                    serialAndTelnetPrintln("{\"Device\":\"LED Bulb\",\"Location\":\"Logic Trainer\",\"State\":\"ON\"}");
+                    onMessage();
                 }
                 else
                 {
-                    serialAndTelnetPrintln("{\"Device\":\"LED Bulb\",\"Location\":\"Logic Trainer\",\"State\":\"OFF\"}");
+                    offMessage();
                 }
             }
         }

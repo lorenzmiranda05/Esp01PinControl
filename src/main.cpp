@@ -18,26 +18,23 @@ void setup()
 
 void loop()
 {
-  if (wm.run() != WL_CONNECTED)
+  // Code that runs even without internet
+  handlePushButtonWithDebounce();
+  if (pinStatus)
   {
-    serialAndTelnetPrintln("WiFi not connected!");
-    delay(5000);
+    digitalWrite(relayPin, HIGH);
   }
+  else
+  {
+    digitalWrite(relayPin, LOW);
+  }
+
   if (wm.run() == WL_CONNECTED)
   {
     ArduinoOTA.handle();
     if (broadcastDeviceDetails == 0)
     {
       server.handleClient();
-      handlePushButtonWithDebounce();
-      if (pinStatus)
-      {
-        digitalWrite(relayPin, HIGH);
-      }
-      else
-      {
-        digitalWrite(relayPin, LOW);
-      }
     }
     else
     {

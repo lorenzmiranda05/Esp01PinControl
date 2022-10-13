@@ -21,6 +21,7 @@
     {
         "deviceType" : "ESP01",
         "broadcastDeviceDetails" : 0,
+        "ipAddress" : [192, 168, 1, 71],
         "accessPoint" : [
                             {
                                 "ssid": "WiFi1",
@@ -110,8 +111,8 @@
 * [x] Control the output of GPIO 0 via a website hosted with ESP8266WebServer.h
 * [x] Control the output of GPIO 0 with a push button connected to GPIO 2
 * [ ] Allow button switch to function even without WiFi connection
-* [ ] Add static IP Address function
-* [ ] Load static IP Address from config.json file
+* [x] Add static IP Address function
+* [x] Load static IP Address from config.json file
 * [ ] Remove relay flicker on ESP start-up
 
 <!-- Reusable and Invisible URL Definitions  -->
