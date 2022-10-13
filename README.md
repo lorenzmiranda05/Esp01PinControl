@@ -113,7 +113,7 @@
 * [ ] Allow button switch to function even without WiFi connection
 * [x] Add static IP Address function
 * [x] Load static IP Address from config.json file
-* [ ] Remove relay flicker on ESP start-up
+* [x] Remove relay flicker on ESP start-up
 
 <!-- Reusable and Invisible URL Definitions  -->
 [Github Link]: https://github.com/lorenzmiranda05/Esp8266LiteTemplate

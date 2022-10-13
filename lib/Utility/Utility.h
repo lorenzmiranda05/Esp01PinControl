@@ -180,11 +180,11 @@ String updateWebpage(uint8_t ledStatus)
 
     if (ledStatus)
     {
-        ptr += "<p>State: ON</p>\n";
+        ptr += "<p>State: OFF</p>\n";
     }
     else
     {
-        ptr += "<p>State: OFF</p>\n";
+        ptr += "<p>State: ON</p>\n";
     }
 
     ptr += "<a class=\"button button-toggle\" href=\"/toggle\">TOGGLE</a>\n";
@@ -208,11 +208,11 @@ void handleOnConnect()
     pinStatus = digitalRead(relayPin);
     if (pinStatus)
     {
-        onMessage();
+        offMessage();
     }
     else
     {
-        offMessage();
+        onMessage();
     }
     server.send(200, "text/html", updateWebpage(pinStatus));
 }
@@ -222,12 +222,12 @@ void handleToggle()
     if (digitalRead(relayPin) == 0)
     {
         pinStatus = 1;
-        onMessage();
+        offMessage();
     }
     else if (digitalRead(relayPin) == 1)
     {
         pinStatus = 0;
-        offMessage();
+        onMessage();
     }
     server.send(200, "text/html", updateWebpage(pinStatus));
 }
@@ -257,11 +257,11 @@ void handlePushButtonWithDebounce()
                 pinStatus = !pinStatus;
                 if (pinStatus)
                 {
-                    onMessage();
+                    offMessage();
                 }
                 else
                 {
-                    offMessage();
+                    onMessage();
                 }
             }
         }

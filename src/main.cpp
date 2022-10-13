@@ -9,7 +9,7 @@ void setup()
   setupOTA();
   pinMode(relayPin, OUTPUT);
   pinMode(buttonPin, INPUT);
-  digitalWrite(relayPin, LOW);
+  digitalWrite(relayPin, HIGH);
   server.on("/", handleOnConnect);
   server.on("/toggle", handleToggle);
   server.onNotFound(handleNotFound);
@@ -18,15 +18,17 @@ void setup()
 
 void loop()
 {
-  // Code that runs even without internet
-  handlePushButtonWithDebounce();
-  if (pinStatus)
+  if (wm.run() != WL_CONNECTED)
   {
-    digitalWrite(relayPin, HIGH);
-  }
-  else
-  {
-    digitalWrite(relayPin, LOW);
+    handlePushButtonWithDebounce();
+    if (pinStatus)
+    {
+      digitalWrite(relayPin, HIGH);
+    }
+    else
+    {
+      digitalWrite(relayPin, LOW);
+    }
   }
 
   if (wm.run() == WL_CONNECTED)
@@ -35,6 +37,15 @@ void loop()
     if (broadcastDeviceDetails == 0)
     {
       server.handleClient();
+      handlePushButtonWithDebounce();
+      if (pinStatus)
+      {
+        digitalWrite(relayPin, HIGH);
+      }
+      else
+      {
+        digitalWrite(relayPin, LOW);
+      }
     }
     else
     {
