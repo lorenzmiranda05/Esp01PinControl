@@ -18,20 +18,7 @@ void setup()
 
 void loop()
 {
-  if (wm.run() != WL_CONNECTED)
-  {
-    handlePushButtonWithDebounce();
-    if (pinStatus)
-    {
-      digitalWrite(relayPin, HIGH);
-    }
-    else
-    {
-      digitalWrite(relayPin, LOW);
-    }
-  }
-
-  if (wm.run() == WL_CONNECTED)
+  if (WiFiMulti.run() == WL_CONNECTED)
   {
     ArduinoOTA.handle();
     if (broadcastDeviceDetails == 0)
