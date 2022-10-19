@@ -18,21 +18,13 @@ void setup()
 
 void loop()
 {
-  if (WiFiMulti.run() == WL_CONNECTED)
+  wifiReconnect();
+  if (WiFi.status() == WL_CONNECTED)
   {
     ArduinoOTA.handle();
     if (broadcastDeviceDetails == 0)
     {
       server.handleClient();
-      handlePushButtonWithDebounce();
-      if (pinStatus)
-      {
-        digitalWrite(relayPin, HIGH);
-      }
-      else
-      {
-        digitalWrite(relayPin, LOW);
-      }
     }
     else
     {
@@ -48,5 +40,15 @@ void loop()
       serialAndTelnetPrintln("Web Server: OFF");
       delay(5000);
     }
+  }
+
+  handlePushButtonWithDebounce();
+  if (pinStatus)
+  {
+    digitalWrite(relayPin, HIGH);
+  }
+  else
+  {
+    digitalWrite(relayPin, LOW);
   }
 }

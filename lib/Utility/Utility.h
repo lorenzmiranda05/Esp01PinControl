@@ -9,6 +9,8 @@
 #define JsonConfigFile "/config.json"
 
 ESP8266WiFiMulti WiFiMulti;
+unsigned long previousMillis = 0;
+unsigned long interval = 60000;
 char espName[15];
 int broadcastDeviceDetails = 1;
 bool pinStatus = LOW;
@@ -123,6 +125,16 @@ bool loadConfigFile()
         serialAndTelnetPrintln(F("Mount FS failed"));
     }
     return false;
+}
+
+void wifiReconnect()
+{
+    unsigned long currentMillis = millis();
+    if ((WiFi.status() != WL_CONNECTED) && (currentMillis - previousMillis >= interval))
+    {
+        WiFiMulti.run();
+        previousMillis = currentMillis;
+    }
 }
 
 void setupOTA()
