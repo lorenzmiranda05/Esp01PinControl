@@ -110,6 +110,7 @@ bool loadConfigFile()
                 IPAddress subnet(255, 255, 0, 0);
                 IPAddress local_IP(json["ipAddress"][0].as<int>(), json["ipAddress"][1].as<int>(), json["ipAddress"][2].as<int>(), json["ipAddress"][3].as<int>());
                 WiFi.config(local_IP, gateway, subnet);
+                ArduinoOTA.setPassword(json["otaPassword"]);
                 return true;
             }
             else
@@ -179,7 +180,7 @@ String updateWebpage(uint8_t ledStatus)
     ptr += "<head><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0, user-scalable=no\">\n";
     ptr += "<title>LED Bulb Control</title>\n";
     ptr += "<style>html {font-family: Helvetica; display: inline-block; margin: 0px auto; text-align: center;}\n";
-    ptr += "body{margin-top: 50px;} h1 {color: #444444;margin: 50px auto 30px;} h3 {color: #444444;margin-bottom: 50px;}\n";
+    ptr += "body{margin-top: 50px;} h1 {color: #444444;margin: 50px auto 30px;} h3 {color: #444444;margin-bottom: 20px;} h5 {color: #444444;margin-bottom: 50px;}\n";
     ptr += ".button {display: block;width: 100px;background-color: #3498db;border: none;color: white;padding: 13px 30px;text-decoration: none;font-size: 25px;margin: 0px auto 35px;cursor: pointer;border-radius: 4px;}\n";
     ptr += ".button-on {background-color: #3498db;}\n";
     ptr += ".button-on:active {background-color: #34495e;}\n";
@@ -189,6 +190,7 @@ String updateWebpage(uint8_t ledStatus)
     ptr += "<body>\n";
     ptr += "<h2>LED Bulb</h2>\n";
     ptr += "<h3>Location: 2F Bedroom</h3>\n";
+    ptr += "<h5>Type: OMNI Surface Mounted Convenience Switch</h3>\n";
 
     if (ledStatus)
     {
