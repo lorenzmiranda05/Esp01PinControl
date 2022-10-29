@@ -22,7 +22,7 @@
         "deviceType" : "ESP01",
         "broadcastDeviceDetails" : 0,
         "ipAddress" : [192, 168, 1, 71],
-        "otaPassword" : "Password1234567890",
+        "otaPassword" : "12345",
         "accessPoint" : [
                             {
                                 "ssid": "WiFi1",
