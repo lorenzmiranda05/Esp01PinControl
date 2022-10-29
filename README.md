@@ -22,6 +22,7 @@
         "deviceType" : "ESP01",
         "broadcastDeviceDetails" : 0,
         "ipAddress" : [192, 168, 1, 71],
+        "otaPassword" : "Password1234567890",
         "accessPoint" : [
                             {
                                 "ssid": "WiFi1",
@@ -114,6 +115,7 @@
 * [x] Add static IP Address function
 * [x] Load static IP Address from config.json file
 * [x] Remove relay flicker on ESP start-up
+* [x] Add OTA Password
 
 <!-- Reusable and Invisible URL Definitions  -->
 [Github Link]: https://github.com/lorenzmiranda05/Esp8266LiteTemplate
